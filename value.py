@@ -40,7 +40,7 @@ class StringValue(object):
         try:
             return float(self.value)
         except:
-            print "Error convert to double"
+            exit("Error convert to double")
             return 0
 
     def as_string(self):

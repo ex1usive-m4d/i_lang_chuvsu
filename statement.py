@@ -21,7 +21,6 @@ class AssigmentStatement(object):
     def execute(self):
         result = self.expression.eval()
         Variables.variables[self.variable] = result
-        # Variables.set_var(self.variable, result)
 
     def __str__(self):
         return '{} = {}'.format(self.variable, self.expression.eval())

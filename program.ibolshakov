@@ -1,9 +1,7 @@
-word = 2 + 2
+/*word = 2 + 2
 word2 = PI + word
 writec "word = " + word + "\n"
 writec "word2 = " + word2 +"\n"
-writec "0" = "0"
-if 5 <  3
-writec " into if"
-else
-writec 0
+writec "0" = "0"*/
+if(1>=1 && 4>=5) writec "true"
+else writec "false"

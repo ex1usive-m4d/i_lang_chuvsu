@@ -13,7 +13,7 @@ class VariableExpression(object):
 
     def eval(self):
         if not Variables.variables.has_key(self.key):
-            Exception("Not found Constant")
+            exit("Not found Constant {}".format(self.key))
         return Variables.variables.get(self.key)
 
     def __str__(self):

@@ -27,3 +27,4 @@ statements = Parser(tokens).parse()
 for statement in statements:
     # print statement
     statement.execute()
+    pass

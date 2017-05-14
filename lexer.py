@@ -7,13 +7,32 @@ class Lexer(object):
     tokens = []
     pos = 0
     length = 0
-    OPERATOR_CHARS = "+-*/()=<>"
-    OPERATOR_TOKENS = [
-        TokenType.PLUS, TokenType.MINUS,
-        TokenType.STAR, TokenType.SLASH,
-        TokenType.LPAREN, TokenType.RPAREN,
-        TokenType.EQUAL, TokenType.LT, TokenType.GT
-    ]
+    OPERATOR_CHARS = "+-*/()=<>!&|"
+
+    OPERATORS = {}
+    OPERATORS.update({"+": TokenType.PLUS})
+    OPERATORS.update({"-": TokenType.MINUS})
+    OPERATORS.update({"*": TokenType.STAR})
+    OPERATORS.update({"/": TokenType.SLASH})
+    OPERATORS.update({"(": TokenType.LPAREN})
+    OPERATORS.update({")": TokenType.RPAREN})
+    OPERATORS.update({"[": TokenType.LBRACKET})
+    OPERATORS.update({"]": TokenType.RBRACKET})
+    OPERATORS.update({"{": TokenType.LBRACE})
+    OPERATORS.update({"}": TokenType.RBRACE})
+    OPERATORS.update({"=": TokenType.EQUAL})
+    OPERATORS.update({"<": TokenType.LT})
+    OPERATORS.update({">": TokenType.GT})
+    OPERATORS.update({":": TokenType.COMMA})
+    OPERATORS.update({"!": TokenType.EXCL})
+    OPERATORS.update({"&": TokenType.AMP})
+    OPERATORS.update({"|": TokenType.BAR})
+    OPERATORS.update({"==": TokenType.EQEQ})
+    OPERATORS.update({"!=": TokenType.EXCLEQ})
+    OPERATORS.update({"<=": TokenType.LTEQ})
+    OPERATORS.update({">=": TokenType.GTEQ})
+    OPERATORS.update({"&&": TokenType.AMPAMP})
+    OPERATORS.update({"||": TokenType.BARBAR})
 
     def Lexer(self, strinput):
         self.strinput = strinput
@@ -36,10 +55,44 @@ class Lexer(object):
         return self.tokens
 
     def tokenize_operator(self):
-        position = self.OPERATOR_CHARS.index(self.peek(0))
-        self.add_token_type(self.OPERATOR_TOKENS[position])
+        current = self.peek(0)
+        if current == '/':
+            if self.peek(1) == '*':
+                self.next()
+                self.next()
+                self.tokenize_multi_line_comment()
+                return
+            elif self.peek(1) == '/':
+                self.next()
+                self.next()
+                self.tokenize_comment()
+                return
+
+        buff = ""
+        while True:
+            text = buff
+            if not self.OPERATORS.has_key(text + current) and text:
+                self.add_token(self.OPERATORS.get(text))
+                return
+            buff += current
+            current = self.next()
+
+    def tokenize_comment(self):
+        current = self.peek(0)
+        while '\r\n\0'.find(current) == -1:
+            current = self.next()
+
+    def tokenize_multi_line_comment(self):
+        current = self.peek(0)
+        while True:
+            if current == '\0':
+                exit("Missing close tag")
+            if current == '*' and self.peek(1) == '/':
+                break
+            current = self.next()
         self.next()
-        return
+        self.next()
+
 
     def tokenize_number(self):
         buff = ""
@@ -47,7 +100,7 @@ class Lexer(object):
         while True:
             if current == '.':
                 if buff.find('.') != -1:
-                    Exception('Invalid float number')
+                    exit('Invalid float number')
             elif not current.isdigit():
                 break
             buff += current
@@ -102,9 +155,6 @@ class Lexer(object):
             self.add_token(TokenType.WORD, buff)
         return None
 
-    def add_token_type(self, type):
-        self.add_token(type, "")
-
     def next(self):
         self.pos += 1
         return self.peek(0)
@@ -115,6 +165,6 @@ class Lexer(object):
             return '\0'
         return self.strinput[position]
 
-    def add_token(self, type, text):
+    def add_token(self, type, text=""):
         temp = Token(type, text)
         self.tokens.append(temp)

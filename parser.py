@@ -40,10 +40,9 @@ class Parser:
             self.consume(TokenType.EQUAL)
             return AssigmentStatement(variable, self.expression())
         else:
-            RuntimeError("Unknown statement")
+            exit("Unknown statement")
 
     def if_else(self):
-
         condition = self.expression()
         if_statement = self.statement()
         if self.match(TokenType.ELSE):
@@ -53,19 +52,48 @@ class Parser:
             return IfStatement(condition, if_statement)
 
     def expression(self):
-        return self.conditional()
+        return self.logic_or()
 
+    def logic_or(self):
+        result = self.logic_and()
+        while True:
+            if (self.match(TokenType.BARBAR)):
+                result = ConditionalExpression(result, self.logic_and(), ConditionalExpression.operator.get("OR"))
+                continue
+            else:
+                break
+        return result
+
+    def logic_and(self):
+        result = self.equaluty()
+        while True:
+            if (self.match(TokenType.AMPAMP)):
+                result = ConditionalExpression(result, self.logic_and(), ConditionalExpression.operator.get("AND"))
+            else:
+                break
+        return result
+
+    def equaluty(self):
+        expr = self.conditional()
+        if self.match(TokenType.EQEQ):
+            return ConditionalExpression(expr, self.conditional(), ConditionalExpression.operator.get("EQUALS"))
+        if self.match(TokenType.EXCLEQ):
+            return ConditionalExpression(expr, self.conditional(), ConditionalExpression.operator.get("NOT_EQUALS"))
+        return expr
     def conditional(self):
         expr = self.additive()
         while True:
-            if self.match(TokenType.EQUAL):
-                expr = ConditionalExpression(expr, self.additive(), "=")
-                continue
             if self.match(TokenType.LT):
-                expr = ConditionalExpression(expr, self.additive(), "<")
+                expr = ConditionalExpression(expr, self.additive(), ConditionalExpression.operator.get("LT"))
                 continue
             if self.match(TokenType.GT):
-                expr = ConditionalExpression(expr, self.additive(), ">")
+                expr = ConditionalExpression(expr, self.additive(), ConditionalExpression.operator.get("GT"))
+                continue
+            if self.match(TokenType.GTEQ):
+                expr = ConditionalExpression(expr, self.additive(), ConditionalExpression.operator.get("GTEQ"))
+                continue
+            if self.match(TokenType.LTEQ):
+                expr = ConditionalExpression(expr, self.additive(), ConditionalExpression.operator.get("LTEQ"))
                 continue
             break
         return expr
