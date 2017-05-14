@@ -7,12 +7,12 @@ class Lexer(object):
     tokens = []
     pos = 0
     length = 0
-    OPERATOR_CHARS = "+-*/()="
+    OPERATOR_CHARS = "+-*/()=<>"
     OPERATOR_TOKENS = [
         TokenType.PLUS, TokenType.MINUS,
         TokenType.STAR, TokenType.SLASH,
         TokenType.LPAREN, TokenType.RPAREN,
-        TokenType.EQUAL
+        TokenType.EQUAL, TokenType.LT, TokenType.GT
     ]
 
     def Lexer(self, strinput):
@@ -91,8 +91,13 @@ class Lexer(object):
                 break
             buff += current
             current = self.next()
+
         if buff == "writec":
             self.add_token(TokenType.WRITEC, buff)
+        elif buff == "if":
+            self.add_token(TokenType.IF, buff)
+        elif buff == "else":
+            self.add_token(TokenType.ELSE, buff)
         else:
             self.add_token(TokenType.WORD, buff)
         return None

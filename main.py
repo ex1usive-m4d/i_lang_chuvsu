@@ -20,10 +20,10 @@ str = open(filename).read()
 m = Lexer()
 m.Lexer(str)
 tokens = m.tokenize()
-for token in tokens:
-    print token
+# for token in tokens:
+#     print token
 
 statements = Parser(tokens).parse()
 for statement in statements:
-    print statement
+    # print statement
     statement.execute()

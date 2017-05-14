@@ -39,3 +39,28 @@ class WritecStatement(object):
 
     def __str__(self):
         return "writec {}".format(self.expression)
+
+
+class IfStatement(object):
+    zope.interface.implements(Statement)
+    if_statement = Statement
+    else_statement = Statement
+    expression = Expression
+
+    def __init__(self, expression, if_statement, else_statement=None):
+        self.expression = expression
+        self.else_statement = else_statement
+        self.if_statement = if_statement
+
+    def execute(self):
+        result = self.expression.eval().as_double()
+        if result != 0:
+            self.if_statement.execute()
+        elif self.else_statement != None:
+            self.else_statement.execute()
+
+    def __str__(self):
+        result = 'if {} {}'.format(self.expression, str(self.if_statement))
+        if self.else_statement != None:
+            result += " \nelse {}".format(self.else_statement)
+        return str(result)

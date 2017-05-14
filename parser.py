@@ -1,5 +1,6 @@
 from binary_expression import BinaryExpression
-from statement import AssigmentStatement, WritecStatement
+from conditional_expression import ConditionalExpression
+from statement import AssigmentStatement, WritecStatement, IfStatement
 from token import Token
 from token_type import TokenType
 from unary_expression import UnaryExpression
@@ -26,6 +27,8 @@ class Parser:
     def statement(self):
         if self.match(TokenType.WRITEC):
             return WritecStatement(self.expression())
+        if self.match(TokenType.IF):
+            return self.if_else()
         return self.assignment_statement()
 
     def assignment_statement(self):
@@ -39,8 +42,33 @@ class Parser:
         else:
             RuntimeError("Unknown statement")
 
+    def if_else(self):
+
+        condition = self.expression()
+        if_statement = self.statement()
+        if self.match(TokenType.ELSE):
+            else_statement = self.statement()
+            return IfStatement(condition, if_statement, else_statement)
+        else:
+            return IfStatement(condition, if_statement)
+
     def expression(self):
-        return self.additive()
+        return self.conditional()
+
+    def conditional(self):
+        expr = self.additive()
+        while True:
+            if self.match(TokenType.EQUAL):
+                expr = ConditionalExpression(expr, self.additive(), "=")
+                continue
+            if self.match(TokenType.LT):
+                expr = ConditionalExpression(expr, self.additive(), "<")
+                continue
+            if self.match(TokenType.GT):
+                expr = ConditionalExpression(expr, self.additive(), ">")
+                continue
+            break
+        return expr
 
     def additive(self):
         expr = self.multiplicative()

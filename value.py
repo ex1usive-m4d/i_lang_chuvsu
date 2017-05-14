@@ -16,6 +16,8 @@ class NumberValue(object):
     def __init__(self, value):
         if type(value) is not isinstance(value, basestring):
             self.value = float(value)
+        if type(value) is isinstance(value, bool):
+            self.value = value if 1 else 0
 
     def as_double(self):
         return self.value

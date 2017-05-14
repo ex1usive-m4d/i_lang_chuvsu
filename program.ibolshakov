@@ -1,3 +1,9 @@
-t = 2
-writec "text"+"text2"
-writec t + PI
+word = 2 + 2
+word2 = PI + word
+writec "word = " + word + "\n"
+writec "word2 = " + word2 +"\n"
+writec "0" = "0"
+if 5 <  3
+writec " into if"
+else
+writec 0
