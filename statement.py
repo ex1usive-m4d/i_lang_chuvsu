@@ -63,3 +63,24 @@ class IfStatement(object):
         if self.else_statement != None:
             result += " \nelse {}".format(self.else_statement)
         return str(result)
+
+
+class BlockStatement(object):
+    zope.interface.implements(Statement)
+    statements = None
+
+    def __init__(self):
+        self.statements = list()
+
+    def add_statement(self, statement):
+        self.statements.append(statement)
+
+    def execute(self):
+        for statement in self.statements:
+            statement.execute()
+
+    def __str__(self):
+        result = ''
+        for statement in self.statements:
+            result += str(statement) + "\n"
+        return str(result)

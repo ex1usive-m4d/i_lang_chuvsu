@@ -23,8 +23,10 @@ tokens = m.tokenize()
 # for token in tokens:
 #     print token
 
-statements = Parser(tokens).parse()
-for statement in statements:
-    # print statement
-    statement.execute()
-    pass
+
+program = Parser(tokens).parse()
+program.execute()
+
+# for statement in statements:
+#     print statement
+#     statement.execute()

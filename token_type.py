@@ -5,6 +5,8 @@ class TokenType():
     WRITEC = "WRITEC"  # Write to console
     IF = "IF"  # IF
     ELSE = "ELSE"  # ELSE
+    WHILE = "WHILE"  # WHILE
+    FOR = "FOR"  # FOR
     PLUS = "PLUS"  # +
     MINUS = "MINUS"  # -
     STAR = "STAR"  # *

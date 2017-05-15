@@ -1,6 +1,6 @@
 from binary_expression import BinaryExpression
 from conditional_expression import ConditionalExpression
-from statement import AssigmentStatement, WritecStatement, IfStatement
+from statement import AssigmentStatement, WritecStatement, IfStatement, BlockStatement
 from token import Token
 from token_type import TokenType
 from unary_expression import UnaryExpression
@@ -19,10 +19,22 @@ class Parser:
         self.size = len(self.tokens)
 
     def parse(self):
-        result = []
+        result = BlockStatement()
         while not self.match(TokenType.EOF):
-            result.append(self.statement())
+            result.add_statement(self.statement())
         return result
+
+    def block(self):
+        block = BlockStatement()
+        self.consume(TokenType.LBRACE)
+        while not self.match(TokenType.RBRACE):
+            block.add_statement(self.statement())
+        return block
+
+    def statement_or_block(self):
+        if self.get(0).get_type() == TokenType.LBRACE:
+            return self.block()
+        return self.statement()
 
     def statement(self):
         if self.match(TokenType.WRITEC):
@@ -34,19 +46,20 @@ class Parser:
     def assignment_statement(self):
         # WORD EQ
         current = self.get(0)
-        if self.match(TokenType.WORD) and self.get(0).get_type() == TokenType.EQUAL:
+        if current.get_type() == TokenType.WORD and self.get(1).get_type() == TokenType.EQUAL:
             self.consume(TokenType.WORD)
             variable = current.get_text()
             self.consume(TokenType.EQUAL)
             return AssigmentStatement(variable, self.expression())
         else:
+            print self.pos, current.get_type()
             exit("Unknown statement")
 
     def if_else(self):
         condition = self.expression()
-        if_statement = self.statement()
+        if_statement = self.statement_or_block()
         if self.match(TokenType.ELSE):
-            else_statement = self.statement()
+            else_statement = self.statement_or_block()
             return IfStatement(condition, if_statement, else_statement)
         else:
             return IfStatement(condition, if_statement)
@@ -80,6 +93,7 @@ class Parser:
         if self.match(TokenType.EXCLEQ):
             return ConditionalExpression(expr, self.conditional(), ConditionalExpression.operator.get("NOT_EQUALS"))
         return expr
+
     def conditional(self):
         expr = self.additive()
         while True:
@@ -153,7 +167,7 @@ class Parser:
     def consume(self, type):
         current = self.get(0)
         if type != current.get_type():
-            return RuntimeError("Token", current, "doesn't match", type)
+            return exit("Token {} doesn't match {}".format(current, type))
         else:
             self.pos += 1
             return current
