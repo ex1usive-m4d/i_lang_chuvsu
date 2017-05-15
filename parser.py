@@ -1,6 +1,6 @@
 from binary_expression import BinaryExpression
 from conditional_expression import ConditionalExpression
-from statement import AssigmentStatement, WritecStatement, IfStatement, BlockStatement, WhileStatement
+from statement import AssigmentStatement, WritecStatement, IfStatement, BlockStatement, WhileStatement, ForStatement
 from token import Token
 from token_type import TokenType
 from unary_expression import UnaryExpression
@@ -43,6 +43,8 @@ class Parser:
             return self.if_else()
         if self.match(TokenType.WHILE):
             return self.while_statement()
+        if self.match(TokenType.FOR):
+            return self.for_statement()
         return self.assignment_statement()
 
     def assignment_statement(self):
@@ -70,6 +72,15 @@ class Parser:
         condition = self.expression()
         statement = self.statement_or_block()
         return WhileStatement(condition, statement)
+
+    def for_statement(self):
+        initialization = self.assignment_statement()
+        self.consume(TokenType.SEMIC)
+        termination = self.expression()
+        self.consume(TokenType.SEMIC)
+        increment = self.assignment_statement()
+        statement = self.statement_or_block()
+        return ForStatement(initialization, termination, increment, statement)
 
     def expression(self):
         return self.logic_or()

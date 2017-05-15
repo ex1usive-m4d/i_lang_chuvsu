@@ -29,5 +29,5 @@ class TokenType():
     RBRACKET = "RBRACKET"  # ]
     LBRACE = "LBRACE"  # {
     RBRACE = "RBRACE"  # }
-    COMMA = "COMMA"  # ,
+    SEMIC = "SEMIC"  # ;
     EOF = "EOF"  # END LINE

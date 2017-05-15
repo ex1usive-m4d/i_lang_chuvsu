@@ -11,10 +11,12 @@ class VariableExpression(object):
     def __init__(self, key):
         self.key = key
 
+
     def eval(self):
-        if not Variables.variables.has_key(self.key):
+        temp = Variables()
+        if not temp.get_var(self.key):
             exit("Not found Constant {}".format(self.key))
-        return Variables.variables.get(self.key)
+        return temp.get_var(self.key)
 
     def __str__(self):
         return "{}".format(self.key)

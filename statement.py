@@ -101,3 +101,27 @@ class WhileStatement(object):
 
     def __str__(self):
         return "while {} {}".format(self.condition, self.statement)
+
+
+class ForStatement(object):
+    zope.interface.implements(Statement)
+    initialziation = Statement  # variable to init
+    termination = Expression  # condition to termitate
+    increment = Statement  # increment var
+    block = Statement
+
+    def __init__(self, initialziation, termination, increment, block):
+        self.initialziation = initialziation
+        self.termination = termination
+        self.increment = increment
+        print increment
+        self.block = block
+
+    def execute(self):
+        self.initialziation.execute()
+        while self.termination.eval().as_double() != 0:
+            self.block.execute()
+            self.increment.execute()
+
+    def __str__(self):
+        return "for {} {} {} {}".format(self.initialziation, self.termination, self.increment, self.block)

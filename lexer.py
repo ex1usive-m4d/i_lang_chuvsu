@@ -7,7 +7,7 @@ class Lexer(object):
     tokens = []
     pos = 0
     length = 0
-    OPERATOR_CHARS = "+-*/(){}=<>!&|"
+    OPERATOR_CHARS = "+-*/(){}=<>!&|;"
 
     OPERATORS = {}
     OPERATORS.update({"+": TokenType.PLUS})
@@ -23,7 +23,7 @@ class Lexer(object):
     OPERATORS.update({"=": TokenType.EQUAL})
     OPERATORS.update({"<": TokenType.LT})
     OPERATORS.update({">": TokenType.GT})
-    OPERATORS.update({":": TokenType.COMMA})
+    OPERATORS.update({";": TokenType.SEMIC})
     OPERATORS.update({"!": TokenType.EXCL})
     OPERATORS.update({"&": TokenType.AMP})
     OPERATORS.update({"|": TokenType.BAR})
