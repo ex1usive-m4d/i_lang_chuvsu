@@ -10,6 +10,7 @@ class TokenType():
     DO = "DO"
     BREAK = "BREAK"
     CONTINUE = "CONTINUE"
+    FUNC = "FUNC"  # FUNC
     PLUS = "PLUS"  # +
     MINUS = "MINUS"  # -
     STAR = "STAR"  # *
@@ -33,4 +34,5 @@ class TokenType():
     LBRACE = "LBRACE"  # {
     RBRACE = "RBRACE"  # }
     SEMIC = "SEMIC"  # ;
+    COMMA = "COMMA"  # ,
     EOF = "EOF"  # END LINE

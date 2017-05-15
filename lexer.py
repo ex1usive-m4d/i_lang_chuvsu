@@ -24,6 +24,7 @@ class Lexer(object):
     OPERATORS.update({"<": TokenType.LT})
     OPERATORS.update({">": TokenType.GT})
     OPERATORS.update({";": TokenType.SEMIC})
+    OPERATORS.update({",": TokenType.COMMA})
     OPERATORS.update({"!": TokenType.EXCL})
     OPERATORS.update({"&": TokenType.AMP})
     OPERATORS.update({"|": TokenType.BAR})
@@ -161,6 +162,8 @@ class Lexer(object):
             self.add_token(TokenType.BREAK, buff)
         elif buff == "continue":
             self.add_token(TokenType.CONTINUE, buff)
+        elif buff == "func":
+            self.add_token(TokenType.FUNC, buff)
         else:
             self.add_token(TokenType.WORD, buff)
         return None

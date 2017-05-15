@@ -1,7 +1,8 @@
 from binary_expression import BinaryExpression
 from conditional_expression import ConditionalExpression
+from functional_expression import FunctionalExpression
 from statement import AssigmentStatement, WritecStatement, IfStatement, BlockStatement, WhileStatement, ForStatement, \
-    BreakStatement, ContinueStatement, DoWhileStatement
+    BreakStatement, ContinueStatement, DoWhileStatement, FunctionStatement, FunctionDefineStatement
 from token import Token
 from token_type import TokenType
 from unary_expression import UnaryExpression
@@ -52,7 +53,10 @@ class Parser:
             return BreakStatement()
         if self.match((TokenType.CONTINUE)):
             return ContinueStatement()
-
+        if self.match(TokenType.FUNC):
+            return self.function_define_statement();
+        if self.get(0).get_type() == TokenType.WORD and self.get(1).get_type() == TokenType.LPAREN:
+            return FunctionStatement(self.function())
         return self.assignment_statement()
 
     def assignment_statement(self):
@@ -96,6 +100,24 @@ class Parser:
         condition = self.expression()
         return DoWhileStatement(condition, statement)
 
+    def function_define_statement(self):
+        name = self.consume(TokenType.WORD).get_text()
+        self.consume(TokenType.LPAREN)
+        arg_names = []
+        while not self.match(TokenType.RPAREN):
+            arg_names.append(self.consume(TokenType.WORD).get_text())
+            self.match(TokenType.COMMA)
+        body = self.statement_or_block()
+        return FunctionDefineStatement(name, arg_names, body)
+
+    def function(self):
+        name = self.consume(TokenType.WORD).get_text()
+        self.consume(TokenType.LPAREN)
+        function = FunctionalExpression(name)
+        while not self.match(TokenType.RPAREN):
+            function.add_argument(self.expression())
+            self.match(TokenType.COMMA)
+        return function
     def expression(self):
         return self.logic_or()
 
@@ -177,12 +199,14 @@ class Parser:
 
     def primary(self):
         current = self.get(0)
-        if self.match(TokenType.TEXT):
-            return ValueExpression(current.get_text())
-        if self.match(TokenType.WORD):
-            return VariableExpression(current.get_text())
         if self.match(TokenType.NUMBER):
             return ValueExpression(float(current.get_text()))
+        if self.get(0).get_type() == TokenType.WORD and self.get(1).get_type() == TokenType.LPAREN:
+            return self.function()
+        if self.match(TokenType.WORD):
+            return VariableExpression(current.get_text())
+        if self.match(TokenType.TEXT):
+            return ValueExpression(current.get_text())
         if self.match(TokenType.LPAREN):
             expr = self.expression()
             self.match(TokenType.RPAREN)

@@ -1,6 +1,8 @@
 import zope.interface
 
 from expression import Expression
+from function import Functions, UserDefineFunction
+from functional_expression import FunctionalExpression
 from variables import Variables
 
 
@@ -179,3 +181,34 @@ class ContinueStatement(RuntimeError):
 
     def __str__(self):
         return "continue"
+
+
+class FunctionStatement(object):
+    zope.interface.implements(Statement)
+    function = FunctionalExpression
+
+    def __init__(self, function):
+        self.function = function
+
+    def execute(self):
+        self.function.eval()
+
+
+class FunctionDefineStatement(object):
+    zope.interface.implements(Statement)
+    name = None
+    arg_names = []
+    body = Statement
+
+    def __init__(self, name, arg_names, body):
+        self.name = name
+        self.arg_names = arg_names
+        self.body = body
+
+    def execute(self):
+        function = Functions()
+        usr = UserDefineFunction(self.arg_names, self.body)
+        function.set(self.name, usr)
+
+    def __str__(self):
+        return "func ({}) {}".format(str(self.arg_names), self.body)

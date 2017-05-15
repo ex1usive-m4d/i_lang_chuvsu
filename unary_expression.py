@@ -22,7 +22,7 @@ class UnaryExpression(object):
 
     def case_expression(self, operator):
         return {
-            '-': NumberValue(-self.expr1.as_number()),
+            '-': NumberValue(-1 * self.expr1.as_number()),
         }.get(operator, self.expr1.eval())
 
     pass
