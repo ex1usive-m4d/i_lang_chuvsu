@@ -8,3 +8,9 @@ if(1==1){
     writec "block"+"1"
 }
 else writec "1>=1 || 4>=5 is false"
+i = 0
+while ( i < 10 ) {
+    writec "i = " + i + "\n"
+    i = i + 1
+}
+

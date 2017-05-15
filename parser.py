@@ -1,6 +1,6 @@
 from binary_expression import BinaryExpression
 from conditional_expression import ConditionalExpression
-from statement import AssigmentStatement, WritecStatement, IfStatement, BlockStatement
+from statement import AssigmentStatement, WritecStatement, IfStatement, BlockStatement, WhileStatement
 from token import Token
 from token_type import TokenType
 from unary_expression import UnaryExpression
@@ -41,6 +41,8 @@ class Parser:
             return WritecStatement(self.expression())
         if self.match(TokenType.IF):
             return self.if_else()
+        if self.match(TokenType.WHILE):
+            return self.while_statement()
         return self.assignment_statement()
 
     def assignment_statement(self):
@@ -52,7 +54,7 @@ class Parser:
             self.consume(TokenType.EQUAL)
             return AssigmentStatement(variable, self.expression())
         else:
-            print self.pos, current.get_type()
+            print self.pos, current.get_type(), current.get_text()
             exit("Unknown statement")
 
     def if_else(self):
@@ -63,6 +65,11 @@ class Parser:
             return IfStatement(condition, if_statement, else_statement)
         else:
             return IfStatement(condition, if_statement)
+
+    def while_statement(self):
+        condition = self.expression()
+        statement = self.statement_or_block()
+        return WhileStatement(condition, statement)
 
     def expression(self):
         return self.logic_or()
@@ -164,7 +171,7 @@ class Parser:
             self.pos += 1
             return True
 
-    def consume(self, type):
+    def consume(self, type=None):
         current = self.get(0)
         if type != current.get_type():
             return exit("Token {} doesn't match {}".format(current, type))

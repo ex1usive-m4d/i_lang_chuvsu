@@ -34,10 +34,10 @@ class WritecStatement(object):
         self.expression = expression
 
     def execute(self):
-        print self.expression.eval()
+        print self.expression.eval(),
 
     def __str__(self):
-        return "writec {}".format(self.expression)
+        return "writec {}".format(self.expression).rstrip()
 
 
 class IfStatement(object):
@@ -84,3 +84,20 @@ class BlockStatement(object):
         for statement in self.statements:
             result += str(statement) + "\n"
         return str(result)
+
+
+class WhileStatement(object):
+    zope.interface.implements(Statement)
+    condition = Expression
+    statement = Statement
+
+    def __init__(self, condition, statement):
+        self.condition = condition
+        self.statement = statement
+
+    def execute(self):
+        while self.condition.eval().as_double() != 0:
+            self.statement.execute()
+
+    def __str__(self):
+        return "while {} {}".format(self.condition, self.statement)
