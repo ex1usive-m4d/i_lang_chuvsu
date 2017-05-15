@@ -26,7 +26,3 @@ tokens = m.tokenize()
 
 program = Parser(tokens).parse()
 program.execute()
-
-# for statement in statements:
-#     print statement
-#     statement.execute()

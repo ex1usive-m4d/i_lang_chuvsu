@@ -7,6 +7,9 @@ class TokenType():
     ELSE = "ELSE"  # ELSE
     WHILE = "WHILE"  # WHILE
     FOR = "FOR"  # FOR
+    DO = "DO"
+    BREAK = "BREAK"
+    CONTINUE = "CONTINUE"
     PLUS = "PLUS"  # +
     MINUS = "MINUS"  # -
     STAR = "STAR"  # *

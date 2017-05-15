@@ -9,12 +9,22 @@ if(1==1){
 }
 else writec "1>=1 || 4>=5 is false"
 i = 0
+writec " while loop \n"
 while ( i < 10 ) {
-    writec "i = " + i + "\n"
     i = i + 1
-}
+    if i == 4 continue
+    writec "i = " + i
 
-for b = 0 ; b < 10; b = b + 1  {
-    writec b + "\n"
+
 }
+writec "\nfor iterate loop \n"
+for b = 0 ; b < 10; b = b + 1  {
+    writec "i = " + b
+}
+writec "\ndo while loop \n"
+i = 0
+do{
+    writec "i = " + i
+    i = i + 1
+} while (i<10)
 

@@ -155,6 +155,12 @@ class Lexer(object):
             self.add_token(TokenType.WHILE, buff)
         elif buff == "for":
             self.add_token(TokenType.FOR, buff)
+        elif buff == "do":
+            self.add_token(TokenType.DO, buff)
+        elif buff == "break":
+            self.add_token(TokenType.BREAK, buff)
+        elif buff == "continue":
+            self.add_token(TokenType.CONTINUE, buff)
         else:
             self.add_token(TokenType.WORD, buff)
         return None

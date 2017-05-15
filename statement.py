@@ -97,10 +97,39 @@ class WhileStatement(object):
 
     def execute(self):
         while self.condition.eval().as_double() != 0:
-            self.statement.execute()
+            try:
+                self.statement.execute()
+            except BreakStatement as er:
+                break
+            except ContinueStatement as c:
+                continue
 
     def __str__(self):
         return "while {} {}".format(self.condition, self.statement)
+
+
+class DoWhileStatement(object):
+    zope.interface.implements(Statement)
+    condition = Expression
+    statement = Statement
+
+    def __init__(self, condition, statement):
+        self.condition = condition
+        self.statement = statement
+
+    def execute(self):
+        while True:
+            try:
+                self.statement.execute()
+            except BreakStatement as er:
+                break
+            except ContinueStatement as c:
+                continue
+            if self.condition.eval().as_double() == 0:
+                break
+
+    def __str__(self):
+        return "do {} while {}".format(self.statement, self.condition, )
 
 
 class ForStatement(object):
@@ -120,8 +149,33 @@ class ForStatement(object):
     def execute(self):
         self.initialziation.execute()
         while self.termination.eval().as_double() != 0:
-            self.block.execute()
-            self.increment.execute()
+            try:
+                self.block.execute()
+                self.increment.execute()
+            except BreakStatement as er:
+                break
+            except ContinueStatement as c:
+                continue
 
     def __str__(self):
         return "for {} {} {} {}".format(self.initialziation, self.termination, self.increment, self.block)
+
+
+class BreakStatement(RuntimeError):
+    zope.interface.implements(Statement)
+
+    def execute(self):
+        raise BreakStatement()
+
+    def __str__(self):
+        return "break"
+
+
+class ContinueStatement(RuntimeError):
+    zope.interface.implements(Statement)
+
+    def execute(self):
+        raise ContinueStatement()
+
+    def __str__(self):
+        return "continue"
